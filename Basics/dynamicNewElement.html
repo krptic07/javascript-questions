@@ -1,0 +1,19 @@
+<!--5. Write the code for dynamically inserting new components.-->
+
+<html>
+  <head>
+    <title>Test</title>
+    <script type="text/javascript">
+      function addNode() {
+        var nodeNew = document.createElement("p");
+        var textNode = document.createTextNode("Text Inserted");
+        nodeNew.appendChild(textNode);
+        document.getElementById("para1").appendChild(nodeNew);
+      }
+    </script>
+  </head>
+  <body>
+    <p id="para1">Elements List</p>
+    <button onclick="addNode()">Click Here</button>
+  </body>
+</html>
