@@ -1,0 +1,43 @@
+//Find the matching element in the DOM?
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Find matching element</title>
+  </head>
+  <body>
+    <div id="container1">
+      <div>
+        <div>
+          <span id="span-id">Test1</span>
+          <span id="span-id-2">Test2</span>
+        </div>
+      </div>
+    </div>
+    <div id="container2">
+      <div>
+        <div></div>
+        <span>Test2</span>
+      </div>
+    </div>
+  </body>
+</html>
+<script type="text/javascript">
+  function findMatchingElement(container, targetElementId) {
+    if (container === document.getElementById(targetElementId)) {
+      return true;
+    } else {
+      for (let child of Array.from(container.children)) {
+        let result = findMatchingElement(child, targetElementId);
+        if (result) return true;
+      }
+    }
+    return false;
+  }
+  const container1 = document.getElementById("container1");
+  console.log(
+    findMatchingElement(container1, "span-id-2")
+      ? console.log("Yippee")
+      : console.log("Sorry!!")
+  );
+</script>

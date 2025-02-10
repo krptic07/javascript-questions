@@ -14,6 +14,8 @@ declare global {
     myEvery(
       callback: (element: T, index: number, array: T[]) => boolean
     ): boolean;
+    myFlat(depth?: number): T[];
+    mySort(): void;
   }
 }
 
@@ -100,4 +102,120 @@ Array.prototype.myEvery = function <T>(
     return true;
   }
 };
-console.log([1, 2, 3, 4].myEvery((element) => element > 3));
+// console.log([1, 2, 3, 4].myEvery((element) => element > 3));
+
+// Write custom function for Array.flat() using both recursive and iterative
+// approaches.
+
+Array.prototype.myFlat = function <T>(
+  depth: number = Number.POSITIVE_INFINITY
+): T[] {
+  if (!Array.isArray(this)) {
+    throw TypeError("Not an array");
+  } else {
+    let result: T[] = [];
+    for (let element of this) {
+      if (Array.isArray(element) && depth > 0) {
+        result = result.concat(element.myFlat(depth - 1));
+      } else {
+        result.push(element);
+      }
+    }
+    return result;
+  }
+};
+
+const flattenArray = <T>(array: any[]): T[] => {
+  let result: T[] = [];
+  for (let element of array) {
+    if (Array.isArray(element)) {
+      result = result.concat(flattenArray(element));
+    } else {
+      result.push(element);
+    }
+  }
+  return result;
+};
+
+const flattenArrayIterative = (array) => {
+  let secondaryArray = [...array];
+  let result = [];
+  while (secondaryArray.length) {
+    const element = secondaryArray.pop();
+    if (Array.isArray(element)) {
+      secondaryArray.push(...element);
+    } else {
+      result.push(element);
+    }
+  }
+  return result.reverse();
+};
+
+const flattenArrayWithDepth = (array, depth) => {
+  let result = [];
+  for (let element of array) {
+    if (Array.isArray(element) && depth > 0) {
+      result = result.concat(flattenArrayWithDepth(element, depth - 1));
+    } else {
+      result.push(element);
+    }
+  }
+  return result;
+};
+
+const nestedArray = [
+  [1, 2, 3], // First inner array
+  [4, 5, 6], // Second inner array
+  [7, 8, 9], // Third inner array
+  [10, 11, [12, 13]], // Fourth inner array with another nested array
+];
+
+// console.log(flattenArray(nestedArray));
+// console.log(flattenArrayIterative(nestedArray));
+// console.log(flattenArrayWithDepth(nestedArray, 1));
+// console.log(nestedArray.myFlat(1));
+
+Array.prototype.mySort = function <T>(): void {
+  if (!Array.isArray(this) || this.length === 0) {
+    throw TypeError("Array should be there");
+  } else {
+    const partitionArray = (
+      array: T[],
+      leftIndex: number,
+      rightIndex: number
+    ) => {
+      let partitionElement = array[leftIndex];
+      let left = leftIndex;
+      let right = rightIndex;
+      while (left < right) {
+        while (array[left] <= partitionElement && left <= rightIndex - 1) {
+          left += 1;
+        }
+        while (array[right] >= partitionElement && right >= leftIndex + 1) {
+          right -= 1;
+        }
+        if (left < right) {
+          [array[left], array[right]] = [array[right], array[left]];
+        }
+      }
+      [array[leftIndex], array[right]] = [array[right], array[leftIndex]];
+      return right;
+    };
+
+    const quickSort = (array: T[], leftIndex: number, rightIndex: number) => {
+      if (leftIndex >= rightIndex) {
+        return;
+      } else {
+        const partitionIndex = partitionArray(array, leftIndex, rightIndex);
+        quickSort(array, leftIndex, partitionIndex - 1);
+        quickSort(array, partitionIndex + 1, rightIndex);
+      }
+    };
+
+    quickSort(this, 0, this.length - 1);
+  }
+};
+
+const testArray = [2, 3, 7, 4, 10, 9, 11, 1, 5, 12, 8];
+testArray.mySort();
+console.log(testArray);
