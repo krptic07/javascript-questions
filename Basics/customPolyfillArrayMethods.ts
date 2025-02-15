@@ -216,6 +216,6 @@ Array.prototype.mySort = function <T>(): void {
   }
 };
 
-const testArray = [2, 3, 7, 4, 10, 9, 11, 1, 5, 12, 8];
-testArray.mySort();
-console.log(testArray);
+// const testArray = [2, 3, 7, 4, 10, 9, 11, 1, 5, 12, 8];
+// testArray.mySort();
+// console.log(testArray);
